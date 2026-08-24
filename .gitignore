@@ -31,3 +31,4 @@ backend/tests/cassettes/*.json.tmp
 
 Knowledge.md
 demo-script.md
+docker-compose.yml
