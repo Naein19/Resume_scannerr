@@ -26,3 +26,7 @@ frontend/.env*.local
 # Data / models downloaded at runtime
 backend/.cache/
 backend/tests/cassettes/*.json.tmp
+
+
+
+Knowledge.md
