@@ -1,0 +1,15 @@
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8000:8000"
+    # MONGO_URL uses mongodb+srv://, which needs a real SRV/TXT DNS lookup
+    # against ..mongodb.net. Docker's default embedded resolver frequently
+    # can't resolve those record types (only plain A/AAAA), so the
+    # container hangs and fails startup with a DNS resolution timeout.
+    # Pointing it at a public recursive resolver fixes that.
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1

@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+dist/
+build/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+frontend/.env*.local
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Data / models downloaded at runtime
+backend/.cache/
+backend/tests/cassettes/*.json.tmp

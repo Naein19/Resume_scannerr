@@ -1,0 +1,76 @@
+[project]
+name = "smart-resume-screener"
+version = "0.1.0"
+description = "Two-stage LLM resume screening and JD matching service"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "pydantic>=2.9.0",
+    "pydantic-settings>=2.6.0",
+    "pdfplumber>=0.11.4",
+    "pymupdf>=1.24.11",
+    "sentence-transformers>=3.2.1",
+    "numpy>=1.26.4",
+    "python-multipart>=0.0.12",
+    "slowapi>=0.1.9",
+    "python-magic>=0.4.27",
+    "tenacity>=9.0.0",
+    "google-genai>=2.19.0",
+    "torch>=2.0.0",
+    "openpyxl>=3.1.5",
+    "requests>=2.34.2",
+    "pymongo[srv]>=4.17.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.3",
+    "pytest-asyncio>=0.24.0",
+    "httpx>=0.27.2",
+    "vcrpy>=6.0.2",
+    "mypy>=1.13.0",
+    "ruff>=0.7.1",
+]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+# B008: FastAPI's Depends()/File()/Query() as argument defaults is the
+# documented, idiomatic pattern (the framework calls them per-request via
+# its DI system) — not the "function call in a mutable default" bug B008
+# exists to catch.
+ignore = ["B008"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app", "prompts"]
+
+# sentence-transformers pulls in torch, and PyPI's default torch wheel
+# bundles the full CUDA toolkit (~4GB of nvidia-* packages) even though
+# this service only ever runs the embedding model on CPU. Pointing torch
+# at PyTorch's dedicated CPU wheel index avoids that entirely — same
+# torch, no GPU deps, a ~150MB install instead of several GB. This is
+# what actually made `docker build` fast; without it the image build was
+# dominated by downloading CUDA libraries no code path here ever uses.
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
